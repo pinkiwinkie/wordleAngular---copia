@@ -1,0 +1,126 @@
+.container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.title {
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.main{
+  flex-grow: 1;
+  margin-top: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.try-container{
+  display: flex;
+  margin-bottom: 4px;
+}
+
+.try-container.shake{
+  animation: shake 500ms;
+}
+
+.letter-container{
+  width: 64px;
+  height: 64px;
+  border: 2px solid #ddd;
+  box-sizing: border-box;
+  margin: 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transform: transform 180ms;
+}
+
+.letter-container.has-text{
+  border-color: #888;
+  animation: letter-pop 120ms;
+}
+
+.letter-container.match{
+  background-color: #6aaa64;
+  border-color: #6aaa64;
+  color: white;
+}
+
+.letter-container.partial{
+  background-color: #c9b458;
+  border-color: #c9b458;
+  color: white;
+}
+
+.letter-container.wrong{
+  background-color: #c46a60;
+  border-color: #c46a60;
+  color: white;
+}
+
+.letter-container.fold{
+  transform: scaleY(0);
+}
+
+.info-msg{
+  position: absolute;
+  top: 72px;
+  padding: 16px 24px;
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  opacity: 0;
+}
+.info-msg.show{
+  opacity: 1;
+}
+
+.info-msg.fade-out{
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+@keyframes letter-pop {
+  0%{transform: scale(1);}
+  50%{transform: scale(1.15);}
+  100%{transform: scale(1);}
+}
+
+@keyframes shake {
+  10%,
+  90%{
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80%{
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70%{
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60%{
+    transform: translateX(4px);
+  }
+}
