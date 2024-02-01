@@ -46,8 +46,9 @@ export class Wordle {
   private numSubmittedTries = 0;
 
   private targetWorld = '';
-  private targetWorldLetterCounts: {[letter: string]: number} = {};
+  private won = false;
 
+  private targetWorldLetterCounts: { [letter: string]: number } = {};
 
   constructor() {
     for (let i = 0; i < NUM_TRIES; i++) {
@@ -59,10 +60,10 @@ export class Wordle {
     }
 
     const numWords = WORDS.length;
-    while(true){
+    while (true) {
       const index = Math.floor(Math.random() * numWords);
       const word = WORDS[index];
-      if(word.length === WORD_LENGTH){
+      if (word.length === WORD_LENGTH) {
         this.targetWorld = word.toLowerCase();
         break;
       }
@@ -70,9 +71,9 @@ export class Wordle {
     //this.targetWorld = 'disco'; //aqui el usuario debe introducir la palabra
     console.log(this.targetWorld);
 
-    for(const letter of this.targetWorld){
+    for (const letter of this.targetWorld) {
       const count = this.targetWorldLetterCounts[letter];
-      if(count == null){
+      if (count == null) {
         this.targetWorldLetterCounts[letter] = 0;
       }
       this.targetWorldLetterCounts[letter]++;
@@ -86,6 +87,10 @@ export class Wordle {
   }
 
   private handleClickKey(key: string) {
+    if (this.won) {
+      return;
+    }
+
     if (LETTERS[key.toLowerCase()]) {
       if (this.currentLetterIndex < (this.numSubmittedTries + 1) * WORD_LENGTH) {
         this.setLetter(key);
@@ -99,6 +104,7 @@ export class Wordle {
       }
     } else if (key === 'Enter') {
       this.checkCurrentTry();
+
     }
   }
 
@@ -115,28 +121,17 @@ export class Wordle {
       return;
     }
 
-    const wordFromCurrentTry=currentTry.letters.map(letter=>letter.text).join('').toUpperCase();
-    if(!WORDS.includes(wordFromCurrentTry)){
-     // this.showInfoMessage("Not in word list");
-      const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
-      tryContainer.classList.add('shake');
-      setTimeout(() => {
-        tryContainer.classList.remove('shake');
-      }, 500)
-      return;
-    }
-
-    const targetWorldLetterCounts = {...this.targetWorldLetterCounts};
+    const targetWorldLetterCounts = { ...this.targetWorldLetterCounts };
     const states: LetterState[] = [];
-    for(let i= 0; i< WORD_LENGTH; i++){
+    for (let i = 0; i < WORD_LENGTH; i++) {
       const expected = this.targetWorld[i]
       const currentLetter = currentTry.letters[i];
       const got = currentLetter.text.toLowerCase();
       let state = LetterState.WRONG;
-      if(expected === got && targetWorldLetterCounts[got]>0){
+      if (expected === got && targetWorldLetterCounts[got] > 0) {
         targetWorldLetterCounts[expected]--;
         state = LetterState.FULL_MATCH;
-      } else if(this.targetWorld.includes(got) && targetWorldLetterCounts[got]>0){
+      } else if (this.targetWorld.includes(got) && targetWorldLetterCounts[got] > 0) {
         targetWorldLetterCounts[got]--;
         state = LetterState.PARTIAL_MATCH;
       }
@@ -147,7 +142,7 @@ export class Wordle {
     const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
 
     const letterEles = tryContainer.querySelectorAll('.letter-container');
-    for(let i=0; i<letterEles.length; i++){
+    for (let i = 0; i < letterEles.length; i++) {
       const currentLetterEle = letterEles[i];
       currentLetterEle.classList.add('fold');
       await this.wait(180);
@@ -155,20 +150,32 @@ export class Wordle {
       currentLetterEle.classList.remove('fold');
       await this.wait(180);
     }
+    this.numSubmittedTries++;
+    if (states.every(state => state === LetterState.FULL_MATCH)) {
+      this.showInfoMessage('Nice!')
+      this.won = true;
+      return;
+    }
+
+    if (this.numSubmittedTries === NUM_TRIES) {
+      this.showInfoMessage(this.targetWorld.toUpperCase(), false);
+    }
   }
 
-  private showInfoMessage(msg: string) {
-    this.infoMsg = msg;
-    setTimeout(() => {
-      this.fadeOutInfoMessage = true;
+  private showInfoMessage(msg: string, hide = true) {
+    if (hide) {
+      this.infoMsg = msg;
       setTimeout(() => {
-        this.infoMsg = ''
-        this.fadeOutInfoMessage = false;
-      })
-    }, 2000)
+        this.fadeOutInfoMessage = true;
+        setTimeout(() => {
+          this.infoMsg = ''
+          this.fadeOutInfoMessage = false;
+        })
+      }, 2000)
+    }
   }
 
-  private async wait(ms:number) {
+  private async wait(ms: number) {
     await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
