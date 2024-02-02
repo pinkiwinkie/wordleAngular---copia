@@ -1,0 +1,5 @@
+<form [formGroup]="newWordForm" (ngSubmit)="addWord()">
+  <label for="newWord">New Word:</label>
+  <input type="text" id="newWord" formControlName="newWord" required>
+  <button type="submit">Change Word</button>
+</form>

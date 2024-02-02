@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, QueryList, ViewChildren, asNativeElements } from "@angular/core";
+import { Component, ElementRef, HostListener, Input, QueryList, ViewChildren, asNativeElements } from "@angular/core";
 import { WORDS } from "../words";
 import { state } from "@angular/animations";
 
@@ -35,6 +35,7 @@ enum LetterState {
 })
 export class Wordle {
   @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
+  @Input() word: string = ''; 
 
   readonly tries: Try[] = []
   readonly LetterState = LetterState;
@@ -58,18 +59,20 @@ export class Wordle {
       }
       this.tries.push({ letters })
     }
-
-    const numWords = WORDS.length;
-    while (true) {
+    if(!this.targetWorld){
+      const numWords = WORDS.length;
       const index = Math.floor(Math.random() * numWords);
       const word = WORDS[index];
       if (word.length === WORD_LENGTH) {
         this.targetWorld = word.toLowerCase();
-        break;
       }
+      console.log(this.targetWorld);
+    } else{
+      this.targetWorld = this.word.toLowerCase();
     }
-    //this.targetWorld = 'disco'; //aqui el usuario debe introducir la palabra
-    console.log(this.targetWorld);
+    
+    //this.targetWorld = this.word; //aqui el usuario debe introducir la palabra
+    
 
     for (const letter of this.targetWorld) {
       const count = this.targetWorldLetterCounts[letter];
