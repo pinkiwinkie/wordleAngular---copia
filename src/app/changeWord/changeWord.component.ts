@@ -18,11 +18,11 @@ export class ChangeWordComponent{
 
   addWord(): void {
     const newWordControl = this.newWordForm.get('newWord');
-  
-  if (newWordControl && newWordControl.valid) {
-    const newWord = newWordControl.value as string;  
-    this.addWordEvent.emit(newWord);
-    this.newWordForm.reset(); 
-  }
-  }
+    if (newWordControl && newWordControl.valid) {
+      const newWord = newWordControl.value as string;  
+      console.log('Emitting event with new word:', newWord);
+      this.addWordEvent.emit(newWord);
+      this.newWordForm.reset(); 
+    }
+  }  
 }

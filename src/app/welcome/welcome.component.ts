@@ -12,13 +12,18 @@ export class WelcomeComponent {
 
   goToGame(): void {
     this.showGame = true;
-    this.showWord = false;  }
+    this.showWord = false;
+  }
 
-  addWord(newWord: string): void{
-    this.showWord = true;  
+  showChangeWordForm(): void {
+    this.showWord = true;
+    this.showGame = false;
+  }
+
+  handleAddWordEvent(newWord: string): void {
     this.currentWord = newWord;
-    setTimeout(() => {
-      this.showGame = true;   
-    }, 0);
+    console.log(this.currentWord);
+    this.showGame = true;
+    this.showWord = false;
   }
 }

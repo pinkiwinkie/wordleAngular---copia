@@ -4,14 +4,14 @@
   </div>
   <div class="main">
     <button (click)="goToGame()">Go to game</button>
-    <button (click)="showWord = true">Change word</button>
+    <button (click)="showChangeWordForm()">Change word</button>
   
     <div *ngIf="showGame">
       <wordle [word]="currentWord"></wordle>
     </div>
 
     <div *ngIf="showWord">
-      <app-change-word (addWordEvent)="addWord($event);  showGame = false;"></app-change-word>
+      <app-change-word (addWordEvent)="handleAddWordEvent($event)"></app-change-word>
     </div>
   </div>
 </div>

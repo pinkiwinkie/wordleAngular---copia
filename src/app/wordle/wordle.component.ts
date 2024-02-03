@@ -35,7 +35,14 @@ enum LetterState {
 })
 export class Wordle {
   @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
-  @Input() word: string = ''; 
+  @Input() set word(value: string) {
+    this.targetWorld = value;
+    console.log('Received word:', this.targetWorld);
+  }
+  ngOnInit(): void {
+    console.log('Received word in ngOnInit:', this.targetWorld);
+  }
+  
 
   readonly tries: Try[] = []
   readonly LetterState = LetterState;
@@ -59,7 +66,7 @@ export class Wordle {
       }
       this.tries.push({ letters })
     }
-    if(!this.targetWorld){
+    /* if(!this.targetWorld){
       const numWords = WORDS.length;
       const index = Math.floor(Math.random() * numWords);
       const word = WORDS[index];
@@ -67,11 +74,14 @@ export class Wordle {
         this.targetWorld = word.toLowerCase();
       }
       console.log(this.targetWorld);
-    } else{
-      this.targetWorld = this.word.toLowerCase();
-    }
+    } else{ */
+   /*  console.log(this.currentWord);
+      this.targetWorld = se
+      console.log(this.targetWorld); */
+      console.log(this.targetWorld);
+    //}
     
-    //this.targetWorld = this.word; //aqui el usuario debe introducir la palabra
+    //this.targetWorld = 'this.word'; //aqui el usuario debe introducir la palabra
     
 
     for (const letter of this.targetWorld) {
