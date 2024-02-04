@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, QueryList, ViewChildren, asNativeElements } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, Input, QueryList, ViewChildren } from "@angular/core";
 import { WORDS } from "../words";
 import { state } from "@angular/animations";
 
@@ -33,16 +33,11 @@ enum LetterState {
   templateUrl: './wordle.component.html',
   styleUrls: ['./wordle.component.css']
 })
-export class Wordle {
+export class Wordle implements AfterViewInit {
   @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
   @Input() set word(value: string) {
     this.targetWorld = value;
-    console.log('Received word:', this.targetWorld);
   }
-  ngOnInit(): void {
-    console.log('Received word in ngOnInit:', this.targetWorld);
-  }
-  
 
   readonly tries: Try[] = []
   readonly LetterState = LetterState;
@@ -66,23 +61,9 @@ export class Wordle {
       }
       this.tries.push({ letters })
     }
-    /* if(!this.targetWorld){
-      const numWords = WORDS.length;
-      const index = Math.floor(Math.random() * numWords);
-      const word = WORDS[index];
-      if (word.length === WORD_LENGTH) {
-        this.targetWorld = word.toLowerCase();
-      }
-      console.log(this.targetWorld);
-    } else{ */
-   /*  console.log(this.currentWord);
-      this.targetWorld = se
-      console.log(this.targetWorld); */
-      console.log(this.targetWorld);
-    //}
-    
-    //this.targetWorld = 'this.word'; //aqui el usuario debe introducir la palabra
-    
+  }
+
+  ngAfterViewInit(): void {
 
     for (const letter of this.targetWorld) {
       const count = this.targetWorldLetterCounts[letter];
@@ -91,7 +72,6 @@ export class Wordle {
       }
       this.targetWorldLetterCounts[letter]++;
     }
-    console.log(this.targetWorldLetterCounts);
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -109,15 +89,13 @@ export class Wordle {
         this.setLetter(key);
         this.currentLetterIndex++;
       }
-    }
-    else if (key === 'Backspace') {
+    } else if (key === 'Backspace') {
       if (this.currentLetterIndex > this.numSubmittedTries * WORD_LENGTH) {
         this.currentLetterIndex--;
         this.setLetter('');
       }
     } else if (key === 'Enter') {
       this.checkCurrentTry();
-
     }
   }
 
@@ -156,12 +134,7 @@ export class Wordle {
 
     const letterEles = tryContainer.querySelectorAll('.letter-container');
     for (let i = 0; i < letterEles.length; i++) {
-      const currentLetterEle = letterEles[i];
-      currentLetterEle.classList.add('fold');
-      await this.wait(180);
       currentTry.letters[i].state = states[i];
-      currentLetterEle.classList.remove('fold');
-      await this.wait(180);
     }
     this.numSubmittedTries++;
     if (states.every(state => state === LetterState.FULL_MATCH)) {
@@ -186,13 +159,5 @@ export class Wordle {
         })
       }, 2000)
     }
-  }
-
-  private async wait(ms: number) {
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, ms);
-    })
   }
 }

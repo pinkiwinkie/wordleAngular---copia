@@ -30,9 +30,6 @@
   margin-bottom: 4px;
 }
 
-.try-container.shake{
-  animation: shake 500ms;
-}
 
 .letter-container{
   width: 64px;
@@ -51,7 +48,6 @@
 
 .letter-container.has-text{
   border-color: #888;
-  animation: letter-pop 120ms;
 }
 
 .letter-container.match{
@@ -72,10 +68,6 @@
   color: white;
 }
 
-.letter-container.fold{
-  transform: scaleY(0);
-}
-
 .info-msg{
   position: absolute;
   top: 72px;
@@ -94,33 +86,4 @@
 .info-msg.fade-out{
   opacity: 0;
   transition: opacity 500ms;
-}
-
-@keyframes letter-pop {
-  0%{transform: scale(1);}
-  50%{transform: scale(1.15);}
-  100%{transform: scale(1);}
-}
-
-@keyframes shake {
-  10%,
-  90%{
-    transform: translateX(-1px);
-  }
-
-  20%,
-  80%{
-    transform: translateX(2px);
-  }
-
-  30%,
-  50%,
-  70%{
-    transform: translateX(-4px);
-  }
-
-  40%,
-  60%{
-    transform: translateX(4px);
-  }
 }
