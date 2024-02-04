@@ -142,9 +142,11 @@ export class Wordle implements AfterViewInit {
       this.won = true;
       return;
     }
-
+    console.log('Num tries:', this.numSubmittedTries);
     if (this.numSubmittedTries === NUM_TRIES) {
+      console.log('Num tries:', this.numSubmittedTries);
       this.showInfoMessage(this.targetWorld.toUpperCase(), false);
+      alert(this.targetWorld.toUpperCase())
     }
   }
 
